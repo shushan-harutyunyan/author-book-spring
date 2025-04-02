@@ -5,7 +5,8 @@
     <title>Books</title>
 </head>
 <body>
-Books Pge
+Books Page
+<a href="/books/add">Add Book</a>
 <table>
     <tr>
         <th>id</th>
@@ -25,8 +26,8 @@ Books Pge
         <td th:text="${book.getAuthor().getName()}"></td>
         <td th:text="${book.getAuthor().getSurname()}"></td>
         <td th:text="${#dates.format(book.getCreatedAt(), 'yyyy-MM-dd')}"></td>
-        <td><a th:href="@{/authors/editAuthor(id=${author.id})}">Edit</a></td>
-        <td><a th:href="@{/authors/delete(id=${author.id})}">Delete</a></td>
+        <td><a th:href="@{/books/editBook(id=${book.id})}">Edit</a></td>
+        <td><a th:href="@{/books/delete(id=${book.id})}">Delete</a></td>
     </tr>
 </table>
 </body>

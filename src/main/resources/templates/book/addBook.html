@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Book</title>
+</head>
+<body>
+Add Book
+
+<form action="/books/add" method="post">
+  Title: <input type="text" name="title" /> <br>
+  Price: <input type="number" name="price"/> <br>
+  Quantity: <input type="number" name="qty"/> <br>
+  Author: <select name="author.id">
+  <option th:each="author:${authors}"
+          th:value="${author.id}"
+          th:text="${author.name + ' ' + author.surname}"></option>
+</select><input type="date" name="dateOfBirthday"/> <br>
+  Gender: <select name="gender">
+  <option value="MALE">MALE</option>
+  <option value="FEMALE">FEMALE</option>
+</select><br>
+  <input type="submit" value="Add">
+</form>
+
+<!--<th:block th:include="fragment/my-fragments::footer"></th:block>-->
+
+</body>
+</html>
