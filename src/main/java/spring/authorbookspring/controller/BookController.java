@@ -1,67 +1,63 @@
 package spring.authorbookspring.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import spring.authorbookspring.entity.Author;
 import spring.authorbookspring.entity.Book;
-import spring.authorbookspring.repository.AuthorRepository;
-import spring.authorbookspring.repository.BookRepository;
+import spring.authorbookspring.service.AuthorService;
+import spring.authorbookspring.service.BookService;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController {
 
-    @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final BookService bookService;
+    private final AuthorService authorService;
 
     @GetMapping
     public String bookPage(ModelMap modelMap) {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookService.findAll();
         modelMap.put("books", books);
         return "book/books";
     }
 
     @GetMapping("/delete")
     public String deleteBook(@RequestParam("id") int id) {
-        bookRepository.deleteById(id);
+        bookService.deleteById(id);
         return "redirect:/books";
     }
 
     @GetMapping("/editBook")
     public String editBookPage(@RequestParam("id") int id, ModelMap modelMap) {
-        Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()) {
-            Book book = bookOptional.get();
+        Book book = bookService.findById(id);
+        if (book != null) {
             modelMap.put("book", book);
             return "/book/editBook";
         }
         return "redirect:/books";
     }
-    @PostMapping("/editBook")
-    public String editBook(@ModelAttribute Book book) {
-        bookRepository.save(book);
-        return "redirect:/books";
-    }
+//    @PostMapping("/editBook")
+//    public String editBook(@ModelAttribute Book book) {
+//        bookService.save(book);
+//        return "redirect:/books";
+//    }
 
     @GetMapping("/add")
     public String addBookPage(ModelMap modelMap) {
-        List<Author> authors = authorRepository.findAll();
+        List<Author> authors = authorService.findAll();
         modelMap.put("authors", authors);
         return "book/addBook";
     }
 
     @PostMapping("/add")
-    public String addBook(@ModelAttribute Book book) {
-        book.setCreatedAt(new Date());
-        bookRepository.save(book);
+    public String addBook(@ModelAttribute Book book, @RequestParam("image") MultipartFile multipartFile) {
+        bookService.save(book, multipartFile);
         return "redirect:/books";
     }
 }

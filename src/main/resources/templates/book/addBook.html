@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org/">
 <head>
   <meta charset="UTF-8">
   <title>Add Book</title>
@@ -7,7 +8,7 @@
 <body>
 Add Book
 
-<form action="/books/add" method="post">
+<form action="/books/add" method="post" enctype="multipart/form-data">
   Title: <input type="text" name="title" /> <br>
   Price: <input type="number" name="price"/> <br>
   Quantity: <input type="number" name="qty"/> <br>
@@ -15,11 +16,8 @@ Add Book
   <option th:each="author:${authors}"
           th:value="${author.id}"
           th:text="${author.name + ' ' + author.surname}"></option>
-</select><input type="date" name="dateOfBirthday"/> <br>
-  Gender: <select name="gender">
-  <option value="MALE">MALE</option>
-  <option value="FEMALE">FEMALE</option>
 </select><br>
+  image: <input type="file" name="image">
   <input type="submit" value="Add">
 </form>
 

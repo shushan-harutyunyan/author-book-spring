@@ -1,24 +1,30 @@
 package spring.authorbookspring.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import spring.authorbookspring.entity.Author;
 import spring.authorbookspring.repository.AuthorRepository;
+import spring.authorbookspring.service.AuthorService;
+import spring.authorbookspring.util.DateUtil;
 
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/authors")
+@RequiredArgsConstructor
+
 public class AuthorController {
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorService authorService;
+    //private final List<AuthorService> authorServices;
+
     @GetMapping
     public String authorPage(ModelMap modelMap) {
-        List<Author> authors = authorRepository.findAll();
+        List<Author> authors = authorService.findAll();
         modelMap.put("authors", authors);
         return "/author/authors";
     }
@@ -30,30 +36,29 @@ public class AuthorController {
 
     @PostMapping("/add")
     public String addAuthor(@ModelAttribute Author author) {
-        authorRepository.save(author);
+        authorService.save(author);
         return "redirect:/authors";
     }
 
     @GetMapping("/delete")
     public String deleteAuthor(@RequestParam("id") int id) {
-        authorRepository.deleteById(id);
+        authorService.deleteById(id);
         return "redirect:/authors";
     }
 
     @GetMapping("/editAuthor")
     public String editAuthorPage(@RequestParam("id") int id, ModelMap modelMap) {
-        Optional<Author> authorOptional = authorRepository.findById(id);
-        if (authorOptional.isPresent()) {
-            Author author = authorOptional.get();
+        Author author = authorService.findById(id);
+        if(author != null){
             modelMap.put("author", author);
-            return "/author/editAuthor";
-        }
+                return "/author/editAuthor";
+            }
         return "redirect:/authors";
     }
 
     @PostMapping("/editAuthor")
     public String editAuthor(@ModelAttribute Author author) {
-        authorRepository.save(author);
+        authorService.save(author);
         return "redirect:/authors";
     }
 }
